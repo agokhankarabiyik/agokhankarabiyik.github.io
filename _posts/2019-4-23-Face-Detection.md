@@ -1,14 +1,11 @@
 ---
 layout: post
-title: You're up and running!
+title: Face Detection
 ---
 
 Python Code Block:
 
 ```python
-
-#USE
-#python face_detection.py --cascade haarcascade_frontalface_default.xml --image GoT.jpg
 
 
 import cv2

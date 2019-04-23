@@ -1,6 +1,6 @@
 ---
 layout: post
-title: You're up and running!
+title: License Plate Recognition
 ---
 
 Python Code Block:
