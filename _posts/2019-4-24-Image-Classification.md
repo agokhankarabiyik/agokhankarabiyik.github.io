@@ -43,12 +43,15 @@ raise AssertionError("The model should be in the pre-defined dictionary")
 inputShape = (224, 224)
 preprocess = imagenet_utils.preprocess_input
 
-# different models use different input sizes such as the InceptionV3 or Xception networks, that's why the input shape should be set to (299x299) instead of (224x224) and need a different image processing function
+# different models use different input sizes such as the InceptionV3 or Xception networks,
+# that's why the input shape should be set to (299x299) instead of (224x224)
+# and need a different image processing function
 if args["model"] in ("inceptionV3", "xception"):
 inputShape = (299, 299)
 preprocess = preprocess_input
 
-# load the network weights from disk --it may take a while to download if it's first time; then,they will be cached and next runs will be faster
+# load the network weights from disk --it may take a while to download
+#if it's first time; then,they will be cached and next runs will be faster
 print("[INFO] loading {}...".format(args["model"]))
 Network = MODELS[args["model"]]
 model = Network(weights="imagenet")
@@ -58,7 +61,9 @@ print("[INFO] loading and pre-processing image...")
 image = load_img(args["image"], target_size=inputShape)
 image = img_to_array(image)
 
-# now, the input image is a NumPy array of shape (inputShape[0], inputShape[1], 3);however, the dimensions should be extended making the shape (1, inputShape[0], inputShape[1], 3) so that it can be passed through the network
+# now, the input image is a NumPy array of shape (inputShape[0], inputShape[1], 3);however,
+# the dimensions should be extended making the shape (1, inputShape[0], inputShape[1], 3)
+# so that it can be passed through the network
 image = np.expand_dims(image, axis=0)
 
 # pre-process the image with the appropriate function based on the model that has been loaded
