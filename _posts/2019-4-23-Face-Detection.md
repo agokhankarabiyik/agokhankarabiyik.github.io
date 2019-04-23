@@ -4,10 +4,9 @@ title: Face Detection
 ---
 ![2019-4-23-Face-Detection](/images/face_detection_output.png "2019-4-23-Face-Detection")
 
-Python Code Block:
+#Python Code Block:
 
-```
-python
+```python
 
 import cv2
 import argparse
