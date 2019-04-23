@@ -2,6 +2,7 @@
 layout: post
 title: Image Classification
 ---
+![2019-4-24-Image-Classification](/images/image_classification_output.png "2019-4-24-Image-Classification")
 
 **Python Code Block:**
 
