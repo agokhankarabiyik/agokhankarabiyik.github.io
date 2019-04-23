@@ -1,6 +1,8 @@
 ---
 layout: post
 title: Face Detection
+header:
+    image: "/images/face_detection_output.png"
 ---
 
 Python Code Block:
