@@ -6,9 +6,7 @@ title: Face Detection
 
 Python Code Block:
 
-```python
-
-
+```
 import cv2
 import argparse
 
@@ -51,7 +49,4 @@ cv2.waitKey(0)
 #as a debugging rule; start with the scaleFactor, adjust it as needed, and then move on to minNeighbors
 
 #capable of running in real-time; but prone to False Positives and parameters can be hard to tune
-
-
-
 ```
