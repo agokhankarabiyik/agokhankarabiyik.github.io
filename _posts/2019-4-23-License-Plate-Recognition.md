@@ -3,9 +3,10 @@ layout: post
 title: License Plate Recognition
 ---
 
-Python Code Block:
+**Python Code Block:**
 
-```
+```python
+
 #Dataset: MediaLab National Technical University Athens in Greece
 #Assumptions:
 #The license plate text is always darker than the license plate background.
