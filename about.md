@@ -5,7 +5,9 @@ permalink: /about/
 ---
 
 Computer Vision Practitioner
+
 Self-learner
+
 Based in Sydney - Australia
 
 ### Contact me
