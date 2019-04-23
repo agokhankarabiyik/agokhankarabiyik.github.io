@@ -7,12 +7,15 @@ title: Face Detection
 Python Code Block:
 
 ```
+python
+
 import cv2
 import argparse
 
 # argument parsers
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--cascade", required=True, help="Path to where the face cascade is") #pre-trained face detector provided by OpenCV
+ap.add_argument("-c", "--cascade", required=True, help="Path to where the face cascade is") 
+#pre-trained face detector provided by OpenCV
 ap.add_argument("-i", "--image", required=True, help="Path to where the image is")
 args = vars(ap.parse_args())
 
@@ -37,7 +40,8 @@ cv2.imshow("Faces", image)
 cv2.waitKey(0)
 
 #Parameters of cv2.CascadeClassifier.detectMultiScale():
-#cascade – Haar classifier cascade (OpenCV 1.x API only). It can be loaded from XML or YAML file using Load(). When the cascade is not needed anymore, release it using cvReleaseHaarClassifierCascade(&cascade).
+#cascade – Haar classifier cascade (OpenCV 1.x API only). It can be loaded from XML or YAML file using Load(). 
+    #When the cascade is not needed anymore, release it using cvReleaseHaarClassifierCascade(&cascade).
 #image – Matrix of the type CV_8U containing an image where objects are detected.
 #objects – Vector of rectangles where each rectangle contains the detected object.
 #scaleFactor – Parameter specifying how much the image size is reduced at each image scale.
