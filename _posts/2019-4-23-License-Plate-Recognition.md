@@ -2,6 +2,8 @@
 layout: post
 title: License Plate Recognition
 ---
+![2019-4-23-License-Plate-Recognition](/images/correct_plate_recognition.png "2019-4-23-License-Plate-Recognition")
+
 
 **Python Code Block:**
 
@@ -267,3 +269,4 @@ char = char[y:y + h, x:x + w]
 return char
 
 ```
+![2019-4-23-License-Plate-Recognition](/images/wrong_plate_recognition.png "2019-4-23-License-Plate-Recognition")
