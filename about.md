@@ -7,8 +7,8 @@ Although I believe that _"Nothing is as it seems"_, you are about to witness bot
 
 ![2019-4-25-about](/images/dont_panic.png "2019-4-25-about")
 
-Based in Sydney - AU
+Based in Sydney - Australia
 
 ### Contact me
 
-agokhankarabiyik@gmail.com
+agokhankarabiyik.cv@gmail.com
