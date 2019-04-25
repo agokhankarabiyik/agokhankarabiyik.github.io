@@ -4,7 +4,7 @@ title: Face Detection
 ---
 ![2019-4-23-Face-Detection](/images/face_detection_output.png "2019-4-23-Face-Detection")
 
-As it can be seen above, the model is able to detect all of the faces in the image correctly. **GoT Spoiler Alert** I believe the detector will fail to detect Arya Stark’s face; but we shouldn’t be blaming it on the detector itself as she is a faceless now.
+As it can be seen above, the model is able to detect all of the faces in the image correctly. *GoT Spoiler Alert* I believe the detector will fail to detect Arya Stark’s face; but we shouldn’t be blaming it on the detector itself as she is a faceless now.
 
 Joking aside, this detector is easy to run in real-time thanks to the cascades being fast at computation and works better at mostly frontal images; however, can give users false-positives easily or miss the presence of a face.
 
