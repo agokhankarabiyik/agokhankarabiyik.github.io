@@ -7,10 +7,6 @@ Although I believe that _"Nothing is as it seems"_, you are about to witness bot
 
 ![2019-4-25-about](/images/dont_panic.png "2019-4-25-about")
 
-Computer Vision Practitioner
-
-Self-learner
-
 Based in Sydney - AU
 
 ### Contact me
