@@ -4,6 +4,15 @@ title: Image Classification
 ---
 ![2019-4-24-Image-Classification](/images/image_classification_output.png "2019-4-24-Image-Classification")
 
+Keras library has many pre-trained models on the ImageNet dataset of more than 1000 different everyday objects. All we need to do is to download the weights of the models of interest and run the associated code for our dataset. That’s exactly what we do in this post.
+
+We can have different probabilities for different pre-trained networks. For example, both ResNet50 and Xception networks give the “liner” label in the first place among the Top-5 predictions, but with different probabilities of 95% and 74%, respectively. This comparison of different pre-trained models may also give us a baseline of which model is more reliable or suitable for our dataset; but of course, this needs an elaborate thinking.
+
+Just before wrapping this blog post up I want to share an anecdote about this post:
+
+Not only do models learn from us but we also learn from them. At least, I realized that this was true for myself as a non-native speaker of the English language when I searched for an image containing a “ship” on Google to test the classifier. After running my code, I ended up having the output image with the “liner” label which was more appropriate to name the object in the image. Apparently, computers can classify images better than I could possibly do. :)
+
+
 **Python Code Block:**
 
 ```python
