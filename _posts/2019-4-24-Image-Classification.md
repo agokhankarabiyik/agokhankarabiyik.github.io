@@ -29,15 +29,15 @@ args = vars(ap.parse_args())
 
 # create a dictionary that connects model names to their classes for Keras
 MODELS = {
-"resnet50": ResNet50,
-"vgg19": VGG19,
-"inceptionV3": InceptionV3,
-"xception": Xception,
+    "resnet50": ResNet50,
+    "vgg19": VGG19,
+    "inceptionV3": InceptionV3,
+    "xception": Xception,
 }
 
 # make sure that the model name is in the list
 if args["model"] not in MODELS.keys():
-raise AssertionError("The model should be in the pre-defined dictionary")
+    raise AssertionError("The model should be in the pre-defined dictionary")
 
 # the input image shape (224x224 pixels) and pre-processing function
 inputShape = (224, 224)
@@ -47,8 +47,8 @@ preprocess = imagenet_utils.preprocess_input
 # that's why the input shape should be set to (299x299) instead of (224x224)
 # and need a different image processing function
 if args["model"] in ("inceptionV3", "xception"):
-inputShape = (299, 299)
-preprocess = preprocess_input
+    inputShape = (299, 299)
+    preprocess = preprocess_input
 
 # load the network weights from disk --it may take a while to download
 #if it's first time; then,they will be cached and next runs will be faster
@@ -76,15 +76,16 @@ P = imagenet_utils.decode_predictions(preds)
 
 # loop over the predictions and print the rank-5 predictions in terminal
 for (i, (imagenetID, label, prob)) in enumerate(P[0]):
-print("{}. {}: {:.2f}%".format(i + 1, label, prob * 100))
+    print("{}. {}: {:.2f}%".format(i + 1, label, prob * 100))
 
 # load the image, print the first prediction on the image, and display
 orig = cv2.imread(args["image"])
 (imagenetID, label, prob) = P[0][0]
 cv2.putText(orig, "Label: {}".format(label), (10, 30),
-cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
 cv2.imshow("Classification", orig)
 cv2.waitKey(0)
+
 
 
 ```
