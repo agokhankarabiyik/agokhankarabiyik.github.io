@@ -88,7 +88,7 @@ class PlateDetector:
         # Sobel gradient to see vertical changes in gradient such as characters
         # and put image into the range [0, 255]
         gradX = cv2.Sobel(blackhat,
-                          ddepth=cv2.cv.CV_32F if imutils.is_cv2() else cv2.CV_32F,
+                          ddepth=cv2.cv.CV_32F,
                           dx=1, dy=0, ksize=-1)
         gradX = np.absolute(gradX)
         (minVal, maxVal) = (np.min(gradX), np.max(gradX))
@@ -120,7 +120,7 @@ class PlateDetector:
                               
             # compute the rotated bounding box of the region
             rect = cv2.minAreaRect(c)
-            box = np.int0(cv2.cv.BoxPoints(rect)) if imutils.is_cv2() else cv2.boxPoints(rect)
+            box = np.int0(cv2.cv.BoxPoints(rect)) 
                               
             # make sure the aspect ratio, height, and width of the bounding box fall within reasonable limits
             if (aspectRatio > 3 and aspectRatio < 5) and h > self.minPlateH and w > self.minPlateW:
