@@ -15,6 +15,8 @@ Therefore, next blog post of mine about License Plate Recognition will be traini
 
 **Python Code Block:**
 
+
+
 ```python
 
 #Dataset: MediaLab National Technical University Athens in Greece
@@ -93,47 +95,47 @@ class PlateDetector:
         (minVal, maxVal) = (np.min(gradX), np.max(gradX))
         gradX = (255 * ((gradX - minVal) / (maxVal - minVal))).astype("uint8")
                           
-                          # blur the gradient, apply a closing operation and threshold the image using Otsu's method as Sobel gives noisy images
+        # blur the gradient, apply a closing operation and threshold the image using Otsu's method as Sobel gives noisy images
         gradX = cv2.GaussianBlur(gradX, (5, 5), 0)
         gradX = cv2.morphologyEx(gradX, cv2.MORPH_CLOSE, rectKernel)
         thresh = cv2.threshold(gradX, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
                           
-                          # erosions and dilations on the image
+        # erosions and dilations on the image
         thresh = cv2.erode(thresh, None, iterations=2)
         thresh = cv2.dilate(thresh, None, iterations=2)
                           
-                          # bitwise 'and' between the 'light' regions of the image to keep only thresholded regions and more erosions and dilations
+        # bitwise 'and' between the 'light' regions of the image to keep only thresholded regions and more erosions and dilations
         thresh = cv2.bitwise_and(thresh, thresh, mask=light)
         thresh = cv2.dilate(thresh, None, iterations=2)
         thresh = cv2.erode(thresh, None, iterations=1)
                           
-                          # find contours in the thresholded image
+        # find contours in the thresholded image
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
                           
-                          # loop over the contours
+        # loop over the contours
         for c in cnts:
-                              # grab the bounding box associated with the contour and compute the area and aspect ratio
+            # grab the bounding box associated with the contour and compute the area and aspect ratio
             (w, h) = cv2.boundingRect(c)[2:]
             aspectRatio = w / float(h)
                               
-                              # compute the rotated bounding box of the region
+            # compute the rotated bounding box of the region
             rect = cv2.minAreaRect(c)
             box = np.int0(cv2.cv.BoxPoints(rect)) if imutils.is_cv2() else cv2.boxPoints(rect)
                               
-                              # make sure the aspect ratio, height, and width of the bounding box fall within reasonable limits
+            # make sure the aspect ratio, height, and width of the bounding box fall within reasonable limits
             if (aspectRatio > 3 and aspectRatio < 5) and h > self.minPlateH and w > self.minPlateW:
-                                  # update the list
+                # update the list
                 regions.append(box)
                               
-                              # return the list of license plate regions
+            # return the list of license plate regions
             return regions
 
     def detectCharacterCandidates(self, region):
-    # apply a 4-point transform to extract the license plate as possible skewness may hurt character segmentation. That's why a top-down, bird's eye view of the plate is needed
+        # Bird's eye view of the plate is needed as skewness may hurt performance
         plate = perspective.four_point_transform(self.image, region)
     
-    # extract the Value component from the HSV color space and apply adaptive thresholding to reveal the characters on the plate
+        # extract the Value component from the HSV color space and apply adaptive thresholding to reveal the characters on the plate
         V = cv2.split(cv2.cvtColor(plate, cv2.COLOR_BGR2HSV))[2]
         T = threshold_local(V, 29, offset=15, method="gaussian")
         thresh = (V > T).astype("uint8") * 255
@@ -184,18 +186,18 @@ class PlateDetector:
                     hull = cv2.convexHull(c)
                     cv2.drawContours(charCandidates, [hull], -1, 255, -1)
     
-    # clear pixels that touch the borders of the character candidates mask and detect contours in the candidates mask
+        # clear pixels that touch the borders of the character candidates mask and detect contours in the candidates mask
         charCandidates = segmentation.clear_border(charCandidates)
         cnts = cv2.findContours(charCandidates.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
                                 
-                                # if there are more character candidates than the supplied number, prune the candidates
+        # if there are more character candidates than the supplied number, prune the candidates
         if len(cnts) > self.numChars:
             (charCandidates, cnts) = self.pruneCandidates(charCandidates, cnts)
                                 
-                                # return the license plate region object containing the license plate, the thresholded
-                                # license plate, and the character candidates
+        # return the license plate region object containing the license plate, the thresholded
+        # license plate, and the character candidates
         return LicensePlate(success=len(cnts) == self.numChars, plate=plate, thresh=thresh,
                                                     candidates=charCandidates)
 
@@ -204,9 +206,9 @@ class PlateDetector:
         prunedCandidates = np.zeros(charCandidates.shape, dtype="uint8")
         dims = []
     
-    # loop over the contours
+        # loop over the contours
         for c in cnts:
-        # compute the bounding box for the contour and update the list of dimensions
+            # compute the bounding box for the contour and update the list of dimensions
             (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
             dims.append(boxY + boxH)
         
@@ -239,24 +241,23 @@ class PlateDetector:
         boxes = []
         chars = []
                                 
-                                # loop over the contours
+        # loop over the contours
         for c in cnts:
-                                    # compute the bounding box for the contour while maintaining the minimum width
+            # compute the bounding box for the contour while maintaining the minimum width
             (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
             dX = min(self.minCharW, self.minCharW - boxW) // 2
             boxX -= dX
             boxW += (dX * 2)
                                         
-                                        # update the list of bounding boxes
+            # update the list of bounding boxes
             boxes.append((boxX, boxY, boxX + boxW, boxY + boxH))
 
-                                        # sort the bounding boxes from left to right
+        # sort the bounding boxes from left to right
         boxes = sorted(boxes, key=lambda b:b[0])
 
-# loop over the started bounding boxes
+        # loop over the started bounding boxes
         for (startX, startY, endX, endY) in boxes:
-    # extract the ROI from the thresholded license plate and update the characters
-    # list
+        # extract the ROI from the thresholded license plate and update the characters list
             chars.append(lp.thresh[startY:endY, startX:endX])
         
         # return the list of characters
@@ -264,7 +265,7 @@ class PlateDetector:
 
 @staticmethod
 def preprocessChar(char):
-        # find the largest contour in the character, grab its bounding box, and crop it
+    # find the largest contour in the character, grab its bounding box, and crop it
     cnts = cv2.findContours(char.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
     if len(cnts) == 0:
@@ -273,9 +274,239 @@ def preprocessChar(char):
         (x, y, w, h) = cv2.boundingRect(c)
         char = char[y:y + h, x:x + w]
 
-# return the processed character
+    # return the processed character
     return char
 
 
 ```
+
+
+```python
+
+# BBPS divides an image into non-overlapping MxN pixel blocks. For each of these blocks, 
+# the ratio of foreground (which is thresholded character) pixels to the number of pixels 
+# in each block is calculated
+
+import cv2
+import numpy as np
+
+class BlockBinaryPixelSum:
+    def __init__(self, targetSize=(30, 15), blockSizes=((5, 5),)):
+        #the discriminability of the descriptor can be increased by using multiple blockSizes
+        self.targetSize = targetSize
+        self.blockSizes = blockSizes
+    
+    def describe(self, image):
+        # the image is presumed as a binary image; characters have intensity >0 and the background is 0
+        image = cv2.resize(image, (self.targetSize[1], self.targetSize[0]))
+        features = []
+        
+        # loop over the block sizes
+        for (blockW, blockH) in self.blockSizes:
+            # loop over the image for the current block size
+            for y in range(0, image.shape[0], blockH):
+                for x in range(0, image.shape[1], blockW):
+                    # extract the ROI, count the total number of non-zero pixels normalizing by the total size of the block
+                    roi = image[y:y + blockH, x:x + blockW]
+                    total = cv2.countNonZero(roi) / float(roi.shape[0] * roi.shape[1])
+                    
+                    # update the feature vector
+                    features.append(total)
+
+        # return the features
+        return np.array(features)
+
+```
+
+
+
+```python
+
+from __future__ import print_function
+import cv2
+import argparse
+import pickle
+from plate_localization.descriptor import BlockBinaryPixelSum
+from sklearn.svm import LinearSVC
+from imutils import paths
+import imutils
+
+# argument parser
+ap = argparse.ArgumentParser()
+ap.add_argument"--examples", required=True, help="path to the examples of letters and numbers dataset")
+ap.add_argument("--letter-classifier", required=True,
+                help="path to the output letter classifier")
+ap.add_argument("--number-classifier", required=True,
+                help="path to the output number classifier")
+args = vars(ap.parse_args())
+
+# initialize characters string
+characters  = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+# initialize the data and labels for the letters and numbers
+lettersData = []
+lettersLabels = []
+numbersData = []
+numbersLabels = []
+
+# initialize the descriptor
+print("describing examples...")
+blockSizes = ((5, 5), (5, 10), (10, 5), (10, 10))
+# multiple block sizes are used to increase the discriminabilty of the descriptor
+desc = BlockBinaryPixelSum(targetSize=(30, 15), blockSizes=blockSizes)
+
+# loop over the example paths
+for examplePath in paths.list_images(args["examples"]):
+    # load the example image, convert it to grayscale and threshold it
+    example = cv2.imread(examplePath)
+    example = cv2.cvtColor(example, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(example, 128, 255, cv2.THRESH_BINARY_INV)[1]
+    
+    # detect contours in the thresholded image
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    # sort them from left to right
+    cnts = sorted(cnts, key=lambda c:(cv2.boundingRect(c)[0] + cv2.boundingRect(c)[1]))
+    
+    # loop over the contours
+    for (i, c) in enumerate(cnts):
+        # grab the bounding box for the contour, extract the ROI, and extract features
+        (x, y, w, h) = cv2.boundingRect(c)
+        roi = thresh[y:y + h, x:x + w]
+        features = desc.describe(roi)
+        
+        # check if it's a letter
+        if i < 26:
+            lettersData.append(features)
+            lettersLabels.append(characters[i])
+        
+        # otherwise, it's a number
+        else:
+            numbersData.append(features)
+            numbersLabels.append(characters[i])
+
+# train the letter classifier
+print("fitting letter model...")
+letterModel = LinearSVC(C=1.0, random_state=61)
+letterModel.fit(lettersData, lettersLabels)
+
+# train the digit classifier
+print("fitting digit model...")
+numberModel = LinearSVC(C=1.0, random_state=61)
+numberModel.fit(numbersData, numbersLabels)
+
+# save the letter classifier
+print("saving letter model...")
+f = open(args["letter_classifier"], "wb")
+f.write(pickle.dumps(letterModel))
+f.close()
+
+# save the number classifier
+print("saving number model...")
+f = open(args["number_classifier"], "wb")
+f.write(pickle.dumps(numberModel))
+f.close()
+
+```
+
+```python
+
+from __future__ import print_function
+import cv2
+import numpy as np
+import argparse
+import pickle
+import imutils
+from imutils import paths
+from plate_localization.localization import PlateDetector
+from plate_localization.descriptor import BlockBinaryPixelSum
+
+# argument parsers
+ap = argparse.ArgumentParser()
+ap.add_argument("--images", required=True,
+                help="path to the images to be classified")
+ap.add_argument("--letter-classifier", required=True,
+                help="path to the output letter classifier")
+ap.add_argument("--number-classifier", required=True,
+                help="path to the output number classifier")
+args = vars(ap.parse_args())
+
+# load the classifiers
+letterModel = pickle.loads(open(args["letter_classifier"], "rb").read())
+numberModel = pickle.loads(open(args["number_classifier"], "rb").read())
+
+# initialize the descriptor
+blockSizes = ((5, 5), (5, 10), (10, 5), (10, 10))
+desc = BlockBinaryPixelSum(targetSize=(30, 15), blockSizes=blockSizes)
+
+# loop over the images
+for imagePath in sorted(list(paths.list_images(args["images"]))):
+    # load the image
+    print(imagePath[imagePath.rfind("/") + 1:])
+    image = cv2.imread(imagePath)
+    
+    # if the width is greater than 600 pixels, resize the image
+    if image.shape[1] > 600:
+        image = imutils.resize(image, width=600)
+
+    # initialize the plate detector
+    pd = PlateDetector(image, numChars=7)
+    plates = pd.detect()
+
+    # loop over the detected plates
+    for (plateBox, chars) in plates:
+    # restructure plateBox
+        plateBox = np.array(plateBox).reshape((-1, 1, 2)).astype(np.int32)
+    
+        # initialize the text containing the recognized characters
+        text = ""
+        
+        # loop over each character
+        for (i, char) in enumerate(chars):
+            # preprocess the character and describe it
+            #char = PlateDetector.preprocessChar(char)
+            if char is None:
+                continue
+            features = desc.describe(char).reshape(1, -1)
+            
+            # if this is the first 3 characters, use the letter classifier
+            if i < 3:
+                prediction = letterModel.predict(features)[0]
+
+            # otherwise, use the number classifier
+            else:
+                prediction = numberModel.predict(features)[0]
+            
+            # update the text of recognized characters
+            text += prediction.upper()
+        
+        # only draw the characters and bounding box if there are some characters that
+        # we can display
+        if len(chars) > 0:
+            # compute the center of the license plate bounding box
+            M = cv2.moments(plateBox)
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
+            
+            # draw the license plate region and license plate text on the image
+            cv2.drawContours(image, [plateBox], -1, (0, 0, 255), 2)
+            cv2.putText(image, text, (cX, cY - 20), cv2.FONT_HERSHEY_DUPLEX, 1.0,
+                        (255, 255, 0), 2)
+
+        # display the output image
+        cv2.imshow("image", image)
+        cv2.waitKey(0)
+
+```
+
+
+
+
+
+
+
+
+
+
+
 ![2019-4-23-License-Plate-Recognition](/images/wrong_plate_recognition.png "2019-4-23-License-Plate-Recognition")
