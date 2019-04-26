@@ -4,18 +4,19 @@ title: License Plate Recognition
 ---
 ![2019-4-23-License-Plate-Recognition](/images/correct_plate_recognition.png "2019-4-23-License-Plate-Recognition")
 
-License Plate Recognition is one of the most widely-used real-life applications of Computer Vision. I asked myself how good a license plate detector could be using only OpenCV library and some basic computer vision techniques. The answer was “good enough but it could have been much better” As in every single algorithm/model, there is always room for improvement. 
+License Plate Recognition is one of the most widely-used real-world applications of Computer Vision. That's why I was interested in building a recognizer for license plates in the very first months of my Computer Vision journey. After learning about the basics of computer vision with OpenCV and some image descriptors, I wanted to get involved in the coding part. It was very hard and confusing at the beginning; however, once I got into the codes it all started making sense and I realized how powerful very simple and basic computer vision techniques could possibly be such as gradients, contours, thresholding, bitwise operations and so on.   
 
-I posted two different images; the first one is at the top of the page which is an image of a correctly recognized license plate and the second one is at the bottom of the page which is not as lucky as the first one. The main reason for this failure lies beneath the dataset used to train the character recognizer. Unfortunately, the dataset was not the real-world representation of characters. As a next step of this project, another dataset of characters extracted from real-world images can be put together and the model can be re-trained. Although this task of creating our own dataset sounds tedious and time-consuming, it is absolutely worth trying as it will give us much higher accuracy. 
+I've added two different output images; the first one is at the top of the page which is an image of a correctly recognized license plate and the second one is at the bottom of the page which is not as lucky as the first one. The main reason for this failure lies beneath the dataset used to train the character recognizer. Unfortunately, the dataset was not the real-world representation of characters. As a next step of this project, another dataset of characters extracted from real-world images can be put together and the model can be re-trained. Although this task of creating our own dataset sounds tedious and time-consuming, it is absolutely worth trying as it will give us much higher accuracy. 
 
-Speaking of tedious things, I remember one of my mentors who is the greatest of all times saying that “You will spend 80% of your time to gather, clean and re-arrange your data and the remaining 20% will be spent on complaining about how tedious that 80% was.” Apologies if you are reading here and this is not exactly what you said; but the gist was this, right? :)
+Speaking of tedious things, I remember one of my mentors who is the greatest of all times saying that “You will spend 80% of your time to gather, clean and re-arrange your data and the remaining 20% will be spent on complaining about how tedious that 80% was.” Apologies if you are reading here and this is not exactly what you said; but the gist was something like this, wasn't it? :)
 
-Therefore, next blog post of mine about License Plate Recognition will be training my recognizer with real-world characters and see the increase in accuracy.
-
+_The codes below should be seen as a self-study with side notes in the light of the course material provided by Dr. Adrian Rosebrock._
 
 **Python Code Block:**
 
+I used to write code in Jupyter notebook during my Data Science times. However, ever since I started studying Computer Vision I've opted for terminal and started executing scripts by the command line arguments which I find it quite easy and effective now. Additionally, I stopped writing hundreds of lines of code in a single script and started dividing them into chunks and calling them into the main script as an import from my local instead which makes everything tidier and eye-pleasing.
 
+The first block of codes below is simply used to detect license plates in images.
 
 ```python
 
@@ -33,7 +34,6 @@ from skimage import segmentation
 from skimage import measure
 import imutils
 from imutils import perspective
-
 
 
 # the named tupled to store the license plate
@@ -72,8 +72,7 @@ class PlateDetector:
 
     def detectPlates(self):
     # rectangular and square kernels will be applied to the image, and initialize the list of license plate regions
-        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 5))
-    # almost 3x as wide as its tall
+        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 5))  # almost 3x as wide as its tall
         squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         regions = []
         
@@ -280,6 +279,7 @@ def preprocessChar(char):
 
 ```
 
+The second block of codes below is used to create a descriptor which will be used later in both training and recognizing steps.
 
 ```python
 
@@ -318,7 +318,7 @@ class BlockBinaryPixelSum:
 
 ```
 
-
+The third block of codes below is used to train the letter and number classifiers.
 
 ```python
 
@@ -408,6 +408,8 @@ f.write(pickle.dumps(numberModel))
 f.close()
 
 ```
+
+Finally, the fourth and the last block of codes below is used as a main driver script to actually recognize the plate with the help of the first three code blocks above.
 
 ```python
 
@@ -499,14 +501,6 @@ for imagePath in sorted(list(paths.list_images(args["images"]))):
 
 ```
 
-
-
-
-
-
-
-
-
-
+Here is an example of license plate recognized wrongly.
 
 ![2019-4-23-License-Plate-Recognition](/images/wrong_plate_recognition.png "2019-4-23-License-Plate-Recognition")
