@@ -22,7 +22,7 @@ import numpy as np
 import argparse
 from keras.applications import ResNet50
 from keras.applications import InceptionV3
-from keras.applications import Xception # can only be used with Tensorflow backend
+from keras.applications import Xception 
 from keras.applications import VGG19
 from keras.applications import imagenet_utils #to pre-process images and decode outputs
 from keras.applications.inception_v3 import preprocess_input
@@ -32,8 +32,8 @@ from keras.preprocessing.image import load_img
 
 # argument parsers
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True, help="path to where the image is")
-ap.add_argument("-model", "--model", type=str, default="resnet50", help="name of pre-trained network")
+ap.add_argument("--image", required=True, help="path to where the image is")
+ap.add_argument("--model", type=str, default="resnet50", help="name of pre-trained network")
 args = vars(ap.parse_args())
 
 # create a dictionary that connects model names to their classes for Keras
@@ -43,10 +43,6 @@ MODELS = {
     "inceptionV3": InceptionV3,
     "xception": Xception,
 }
-
-# make sure that the model name is in the list
-if args["model"] not in MODELS.keys():
-    raise AssertionError("The model should be in the pre-defined dictionary")
 
 # the input image shape (224x224 pixels) and pre-processing function
 inputShape = (224, 224)
@@ -61,40 +57,34 @@ if args["model"] in ("inceptionV3", "xception"):
 
 # load the network weights from disk --it may take a while to download
 #if it's first time; then,they will be cached and next runs will be faster
-print("[INFO] loading {}...".format(args["model"]))
+print("loading {}...".format(args["model"]))
 Network = MODELS[args["model"]]
 model = Network(weights="imagenet")
 
-# load the input image
-print("[INFO] loading and pre-processing image...")
+# load the input image and preprocess it
+print("loading and pre-processing image...")
 image = load_img(args["image"], target_size=inputShape)
 image = img_to_array(image)
 
-# now, the input image is a NumPy array of shape (inputShape[0], inputShape[1], 3);however,
-# the dimensions should be extended making the shape (1, inputShape[0], inputShape[1], 3)
-# so that it can be passed through the network
 image = np.expand_dims(image, axis=0)
-
-# pre-process the image with the appropriate function based on the model that has been loaded
 image = preprocess(image)
 
 # classification
-print("[INFO] classifying image with '{}'...".format(args["model"]))
+print("classifying image with '{}'...".format(args["model"]))
 preds = model.predict(image)
 P = imagenet_utils.decode_predictions(preds)
 
-# loop over the predictions and print the rank-5 predictions in terminal
+# loop over the predictions and print the Top-5 predictions in terminal
 for (i, (imagenetID, label, prob)) in enumerate(P[0]):
-    print("{}. {}: {:.2f}%".format(i + 1, label, prob * 100))
+    print("{}: {:.2f}%".format(label, prob * 100))
 
 # load the image, print the first prediction on the image, and display
 orig = cv2.imread(args["image"])
 (imagenetID, label, prob) = P[0][0]
 cv2.putText(orig, "Label: {}".format(label), (10, 30),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+            cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 0, 0), 2)
 cv2.imshow("Classification", orig)
 cv2.waitKey(0)
-
 
 
 ```

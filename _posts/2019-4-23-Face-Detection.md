@@ -20,8 +20,8 @@ import argparse
 
 # argument parsers
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--cascade", required=True, help="Path to where the face cascade is") #pre-trained face detector provided by OpenCV
-ap.add_argument("-i", "--image", required=True, help="Path to where the image is")
+ap.add_argument("--cascade", required=True, help="Path to where the face cascade is") #pre-trained face detector provided by OpenCV
+ap.add_argument("--image", required=True, help="Path to where the image is")
 args = vars(ap.parse_args())
 
 # load the image and convert it to grayscale
@@ -41,7 +41,7 @@ for (x, y, w, h) in faces:
 print("{} face(s) found".format(len(faces)))
 
 # display the detected faces
-cv2.imshow("Faces", image)
+cv2.imshow("Face Detection", image)
 cv2.waitKey(0)
 
 #Parameters of cv2.CascadeClassifier.detectMultiScale():
@@ -59,3 +59,4 @@ cv2.waitKey(0)
 #capable of running in real-time; but prone to False Positives and parameters can be hard to tune
 
 ```
+*The image was taken from <https://ksassets.timeincuk.net/wp/uploads/sites/55/2017/08/2017_GameOfThrones_HBO_220817-920x584.jpg>
