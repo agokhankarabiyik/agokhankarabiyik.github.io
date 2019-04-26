@@ -3,7 +3,6 @@ layout: post
 title: Image Classification
 ---
 ![2019-4-24-Image-Classification](/images/image_classification_output.png "2019-4-24-Image-Classification")
-<http://www.seatrade-cruise.com/media/k2/items/cache/3356e0cd9331018e19a8cee016f484a2_XL.jpg>
 
 Keras library has many pre-trained models on the ImageNet dataset of more than 1000 different everyday objects. All we need to do is to download the weights of the models of interest and run the associated code for our dataset. That’s exactly what we do in this post.
 
@@ -99,3 +98,4 @@ cv2.waitKey(0)
 
 
 ```
+*The image was taken from: <http://www.seatrade-cruise.com/media/k2/items/cache/3356e0cd9331018e19a8cee016f484a2_XL.jpg>
