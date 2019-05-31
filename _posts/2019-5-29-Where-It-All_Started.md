@@ -234,6 +234,8 @@ plt.title('Predictions about the number of transactions per week', fontsize = 14
 
 ![2019-5-29-Where-It-All-Started](/images/sales_likes.png "2019-5-29-Where-It-All-Started")
 
+<p align="center">
+
 ![2019-5-29-Where-It-All-Started](/images/sales_vs_likes.png "2019-5-29-Where-It-All-Started")
 
 ![2019-5-29-Where-It-All-Started](/images/648.png "2019-5-29-Where-It-All-Started")
