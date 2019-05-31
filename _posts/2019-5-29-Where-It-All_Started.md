@@ -222,6 +222,21 @@ plt.title('Predictions about the number of transactions per week', fontsize = 14
 ```
 ![2019-5-29-Where-It-All-Started](/images/timeseries.png "2019-5-29-Where-It-All-Started")
 
+```python
+
+
+
+```
+
+![2019-5-29-Where-It-All-Started](/images/prediction_transactions_value.png "2019-5-29-Where-It-All-Started")
+
+![2019-5-29-Where-It-All-Started](/images/alive-dead.png "2019-5-29-Where-It-All-Started")
+
+![2019-5-29-Where-It-All-Started](/images/sales_likes.png "2019-5-29-Where-It-All-Started")
+
+![2019-5-29-Where-It-All-Started](/images/sales_vs_likes.png "2019-5-29-Where-It-All-Started")
+
+![2019-5-29-Where-It-All-Started](/images/648.png "2019-5-29-Where-It-All-Started")
 
 
 
@@ -247,7 +262,5 @@ plt.title('Predictions about the number of transactions per week', fontsize = 14
 
 
 
-
-
-*The images were taken from: 
+*The image of the Frangipani above was taken from: 
 <https://www.bhg.com.au/cdnstorage/cache/6/3/6/0/8/9/x636089759e1b42fcf8a2fd3a5050a1a9923494a6.jpg.pagespeed.ic.v1AO_uIThA.jpg>
