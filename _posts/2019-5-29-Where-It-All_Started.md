@@ -125,6 +125,9 @@ plt.ylabel('Number of transactions', fontsize = 14)
 plt.title('Number of transactions per week', fontsize = 14)
 
 ```
+
+![2019-5-29-Where-It-All-Started](/images/number_of_transactions.png "2019-5-29-Where-It-All-Started")
+
 # Cycle of transactions
 
 **Number of transactions per week**
@@ -133,8 +136,8 @@ plt.title('Number of transactions per week', fontsize = 14)
 
 #assigning Sunday as start of the week, create transactions_by_week
 
-week_start = pd.date_range(dt.datetime(2014,12,1), dt.datetime(2017,8,7), freq='W')
-week_finish = pd.date_range(dt.datetime(2014,12,8), dt.datetime(2017,8,14), freq='W')
+week_start = pd.date_range(dt.datetime(2014,12,1), dt.datetime(2017,8,7), freq='W', tz = 'Australia/Brisbane')
+week_finish = pd.date_range(dt.datetime(2014,12,8), dt.datetime(2017,8,14), freq='W', tz = 'Australia/Brisbane')
 transactions = []
 for i in range(len(week_start)):
     transactions.append(sales[(sales.local_sale_time > week_start[i]) & 
@@ -172,8 +175,6 @@ plt.title('Number of transactions per week', fontsize = 14, fontweight = 'bold')
 
 ![2019-5-29-Where-It-All-Started](/images/weekly_number_of_transactions.png "2019-5-29-Where-It-All-Started")
 
-# Time Series by HOLT-WINTERS
-
 **Transactions value per week**
 
 ```python
@@ -188,6 +189,10 @@ for i in range(len(week_start)):
 transaction_value_by_week = pd.Series(data=transactions_value, index=week_start)
 
 ```
+
+![2019-5-29-Where-It-All-Started](/images/transactions_value_per_week.png "2019-5-29-Where-It-All-Started")
+
+# Time Series by HOLT-WINTERS
 
 **Predictions about the number of transactions per week**
 
