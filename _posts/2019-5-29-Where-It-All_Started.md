@@ -192,79 +192,231 @@ transaction_value_by_week = pd.Series(data=transactions_value, index=week_start)
 
 ![2019-5-29-Where-It-All-Started](/images/transactions_value_per_week.png "2019-5-29-Where-It-All-Started")
 
-# Time Series by HOLT-WINTERS
-
-**Predictions about the number of transactions per week**
-
-```python
-
-#Holt-winters library doesn't understand pandas data 
-#leave off some data so that you can compare how well the prediction matches reality
-#the cycle length for the seasonal component
-#how far ahead do I want to predict
-
-fig, ax = plt.subplots(figsize=(18,10))
-
-prediction_length = 72
-truncate_length = prediction_length/2
-
-predicted_values = holtwinters.multiplicative(list(transactions_by_week)[4:-truncate_length], 52, prediction_length)
-prediction_timeframe = pd.date_range(
-    transactions_by_week.index[-truncate_length], 
-    freq='W', periods=prediction_length)
-prediction_value_series = pd.Series(data=predicted_values[0],  index=prediction_timeframe)
-
-prediction_value_series.plot(ax=ax, c='red', label = 'prediction')
-transactions_by_week.plot(ax=ax, c='blue', label = 'actual')
-
-handles, labels = ax.get_legend_handles_labels()
-ax.legend(handles, labels, loc = 'best', prop={'size': 14})
-
-plt.xlabel('Dates_weekly', fontsize = 14)
-plt.ylabel('Number of transactions', fontsize = 14)
-plt.title('Predictions about the number of transactions per week', fontsize = 14, fontweight = 'bold')
-
-```
 ![2019-5-29-Where-It-All-Started](/images/timeseries.png "2019-5-29-Where-It-All-Started")
 
 ```python
 
+f = fitter.Fitter(transactions_by_week[transactions_by_week.index < dt.datetime(2017,1,1)])
+f.fit()
+f.summary()
 
+f = fitter.Fitter(transactions_by_week[transactions_by_week.index > dt.datetime(2017,1,1)])
+f.fit()
+f.summary()
+```
+
+```python
+
+scipy.stats.mannwhitneyu(
+ transactions_by_week[transaction_value_by_week.index < dt.datetime(2017,1,1)],
+ transactions_by_week[transaction_value_by_week.index > dt.datetime(2017,1,1)]
+)
 
 ```
 
-![2019-5-29-Where-It-All-Started](/images/prediction_transactions_value.png "2019-5-29-Where-It-All-Started")
+# Customers life-time analysis
 
-![2019-5-29-Where-It-All-Started](/images/alive-dead.png "2019-5-29-Where-It-All-Started")
+
+```python
+import lifetimes
+cust_lifetime = lifetimes.utils.summary_data_from_transaction_data(sales, 'customer_id', 'local_sale_time', 'total_price', freq='W')
+cust_lifetime
+
+cust_lifetime.monetary_value[cust_lifetime.monetary_value < 0]
+
+cust_lifetime2 = cust_lifetime[(cust_lifetime.monetary_value != -66.0) & (cust_lifetime.monetary_value != 0.0)]
+cust_lifetime2.sort_values('monetary_value', ascending = False)
+```
+
+- `frequency` represents the number of *repeat* purchases the customer has made. This means that it's one less than the total number of purchases. 
+- `T` represents the age of the customer in whatever time units chosen (weekly above). This is equal to the duration between a customer's first purchase and the end of the period under study.
+- `recency` represents the age of the customer when they made their most recent purchases. This is equal to the duration between a customer's first purchase and their latest purchase. (Thus if they have made only 1 purchase, the recency is 0.)
+
+**Visualise the Frequency/Recency Matrix**
+
+```python
+
+import lifetimes.plotting
+lifetimes.plotting.plot_frequency_recency_matrix(bgf, cmap = 'hot')
+
+```
+![2019-5-29-Where-It-All-Started](/images/freq_recency_mat.png "2019-5-29-Where-It-All-Started")
+
+```python
+
+lifetimes.plotting.plot_probability_alive_matrix(bgf, cmap = 'rainbow')
+
+```
+
+![2019-5-29-Where-It-All-Started](/images/prob_alive_mat.png "2019-5-29-Where-It-All-Started")
+
+```python
+
+t = 52
+cust_lifetime['predicted_purchases'] = cust_lifetime.apply(lambda r: 
+             bgf.conditional_expected_number_of_purchases_up_to_time(t, r['frequency'], r['recency'], r['T']), axis=1)
+
+best_projected_cust = cust_lifetime.sort_values('predicted_purchases').tail(6)
+best_projected_cust
+
+```
+
+```python
+
+lifetimes.plotting.plot_period_transactions(bgf, figsize = (14,8))
+
+#handles, labels = ax.get_legend_handles_labels()
+#ax.legend(handles, labels, loc = 'best', prop={'size': 20})
+
+plt.xlabel('Number of Calibration Period Transactions', fontsize = 14)
+plt.ylabel('Customers', fontsize = 14)
+plt.title('Frequency of Repeat Transactions', fontsize = 14)
+
+```
+
+![2019-5-29-Where-It-All-Started](/images/calib_transactions.png "2019-5-29-Where-It-All-Started")
+
+**INSTAGRAM**
+
+text likes and photos were already scraped from Insta by the help of another script found on Github.
+
+```python
+
+with open('--------.json','r') as f:
+    result = json.loads(f.read())
+
+epoch = []
+for i in range (len(results)):
+    epoch.append(int(results[i]['created_time']))
+    
+
+dates = pd.Series(epoch).apply((lambda x: time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(x)))))
+dates
+
+likes =[]
+for i in range (len(results)):
+    likes.append(results[i]['likes']['count'])
+likes
+
+text =[]
+for i in range (len(results)):
+    if results[i]['caption'] is None:
+        text.append('No caption')
+    else:
+        text.append(results[i]['caption']['text'])
+
+```
+
+#Create a dataframe : two columns : text, likes
+
+#stopwords : is, the etc
+
+#stemming
+
+#CountVectorizer(df.text, stop_words='english')
+
+#Linear Regression
+
+#Interpret the co-efficients to look at words which influence more likes.
+
+```python
+
+df = {'likes': likes, 'text': text}
+#df = pd.DataFrame([likes, text]).T
+df_insta = pd.DataFrame(df)
+df_insta
+df_insta.sort_values('likes', ascending = False)
+
+```
+
+```python
+
+df_insta.loc[0]['text']
+
+df_insta.text
+
+```
+
+```python
+
+stop_words = set(stopwords.words('english'))
+words = []
+for i in range (len(df_insta.index)):
+    w = nltk.word_tokenize(df_insta.loc[i]['text'])
+    w = [x for x in w if x.lower() not in stop_words]
+    words.append(w)
+words
+
+hash_tags = [x.lstrip("#") for x in " ".join(df_insta['text']).split() if x.startswith('#')]
+total_words =  [x.lstrip("#") for x in (" ".join(df_insta['text']).split())]
+
+```
+
+```python
+
+len(set(hash_tags)), len(set(total_words))
+
+set([h for h in hash_tags if h in total_words])
+
+set([h for h in total_words if h not in hash_tags])
+
+import sklearn.feature_extraction.text
+df_insta['text']
+
+tfidf = sklearn.feature_extraction.text.TfidfVectorizer
+
+tfidf = sklearn.feature_extraction.text.TfidfVectorizer(lowercase=True,
+                                                       max_features=200,
+                                                        ngram_range=(1,3))
+vectorised = tfidf.fit_transform(df_insta['text'])
+tfidf_df = pd.DataFrame(vectorised.toarray(), columns = tfidf.get_feature_names())
+
+```
+
+```python
+
+import sklearn.preprocessing
+scaler = sklearn.preprocessing.StandardScaler()
+X_s = scaler.fit_transform(tfidf_df)
+
+import sklearn.model_selection
+
+gridsearch = sklearn.model_selection.GridSearchCV(
+    sklearn.linear_model.Lasso(),
+    param_grid = {'alpha': [0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000]},
+    cv=3
+)
+
+gridsearch.fit(X_s, likes)
+
+```
 
 ![2019-5-29-Where-It-All-Started](/images/sales_likes.png "2019-5-29-Where-It-All-Started")
 
 ![2019-5-29-Where-It-All-Started](/images/sales_vs_likes.png "2019-5-29-Where-It-All-Started")
 
+```python
+
+import cv2
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", required = True, help = "path to the image")
+args = {}
+
+image = cv2.imread(args["image"])
+
+chans = cv2.split(image)
+colors = ('b', 'r', 'g')
+
+plt.figure()
+plt.title("'Flattened' Color Histogram")
+plt.xlabel("Bins")
+plt.ylabel("# of Pixels")
+
+```
+
 ![2019-5-29-Where-It-All-Started](/images/648.png "2019-5-29-Where-It-All-Started")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 *The image of the Frangipani above was taken from: 
