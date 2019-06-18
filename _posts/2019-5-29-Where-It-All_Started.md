@@ -64,7 +64,7 @@ sales.customer_id.nunique()
 ```python
 
 sales['sale_date'] = pd.to_datetime(sales.sale_date)
-sales['local_sale_time'] =      sales['sale_date'].dt.tz_localize('UTC').dt.tz_convert('Australia/Brisbane')
+sales['local_sale_time'] =   sales['sale_date'].dt.tz_localize('UTC').dt.tz_convert('Australia/Brisbane')
 
 #add columns into the dataframe
 
@@ -313,7 +313,7 @@ for p in [0, 1, 2, 3, 52]:
 sorted(results_dict.items(), key = lambda x:x[1])
 
 ```
-After the grid search above, I found the optimum parameters and inserted them into my model.
+After the grid search above, I found the optimum parameters and used them to fit the model.
 
 ```python
 
@@ -322,6 +322,7 @@ model_fit = sarima.fit()
 
 ```
 
+Finally, the next code block was written to get the results predicted by the model and plot the projection.
 
 ```python
 
@@ -337,9 +338,9 @@ new_holidays = pd.DataFrame([1 if (idx.week, idx.year) in hlist else 0  for idx 
 
 results = model_fit.get_forecast(steps = 52, exog=new_holidays)
 
-```
+#to numerically see the predictions ie. predicted value of weekly transactions
 
-```python
+np.power(10,results.predicted_mean)
 
 plt.plot(ts2.index, ts2.log_value)
 idx = pd.date_range('2017-08-13', periods = 52, freq = 'W') #create additional data points for the plot
@@ -347,14 +348,6 @@ idx = pd.date_range('2017-08-13', periods = 52, freq = 'W') #create additional d
 #confidence_intervals = results.conf_int(alpha = 0.05)
 plt.plot(idx, results.predicted_mean)
 #plt.fill_between(idx, confidence_intervals['lower log_sales'], confidence_intervals['upper log_sales'])
-
-```
-
-```python
-
-#to numerically see the predictions ie. predicted value of weekly transactions
-
-np.power(10,results.predicted_mean)
 
 ```
 
