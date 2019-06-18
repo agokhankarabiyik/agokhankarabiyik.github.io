@@ -219,7 +219,9 @@ scipy.stats.mannwhitneyu(
 
 **ARIMA**
 
-Autoregressive Integrated Moving Average Model
+Autoregressive Integrated Moving Average Model (ARIMA) is one of the methods to predict future values/points in a series. 
+
+I started off with checking missing values and stationarity which is an assumption meaning that the statistical properties in a time series such as mean, varience etc. are constant over time. Still, I needed to move onto another version of ARIMA as I couldn't get what I was hoping for from ARIMA.
 
 ```python
 
@@ -245,10 +247,6 @@ ts2['holiday'] = 0
 ts2.loc[mask,'holiday']=1
 ts2.head()
 
-```
-
-```python
-
 #Check if there are any missing values
 
 start = ts2.index.min() #get the start date from the data
@@ -258,21 +256,12 @@ if ts2.shape[0] == len(idx):
     print 'No Missing Values'
 else:
     print 'Missing Values'
-    
-```
-
-```python
 
 #Time series Stationarity check
 plt.plot(ts2.value)
 
 #Lets do differencing to make it stationary
 plt.plot(ts2.diff())
-
-```
-
-
-```python
 
 #Since the variance is not constant, taking log of the sales to make it constant over a period of time
 ts2['log_value'] = np.log10(ts2['value'])
@@ -313,18 +302,12 @@ for p in [0, 1, 2, 3, 52]:
 sorted(results_dict.items(), key = lambda x:x[1])
 
 ```
-After the grid search above, I found the optimum parameters and used them to fit the model.
+After the grid search above, I found the optimum parameters and used them to fit the model and get the results predicted by the model to plot the projection. As it can be seen in the graph below, the model was able to predict all the up and downs of the seasonality reasonably well.
 
 ```python
 
 sarima = sm.tsa.statespace.SARIMAX(ts2.log_value, exog=ts2.holiday, order = (3, 1, 1), seasonal_order = (1, 1, 1, 24))
 model_fit = sarima.fit()
-
-```
-
-Finally, the next code block was written to get the results predicted by the model and plot the projection.
-
-```python
 
 ts2.index.max()
 
@@ -354,6 +337,8 @@ plt.plot(idx, results.predicted_mean)
 ![2019-5-29-Where-It-All-Started](/images/timeseries.png "2019-5-29-Where-It-All-Started")
 
 # Customer life-time analysis
+
+Another component of this project was Customer Life-time Analysis. Not only do businesses have to acquire new customers for the sake of their existence in industry and financial health but retaining existing customers by predicting and preventing churn is also important to them. For this purpose, some analyses were performed and the results were displayed to act accordingly in the future.
 
 ```python
 

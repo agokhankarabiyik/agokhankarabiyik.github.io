@@ -8,8 +8,6 @@ Keras library has many pre-trained models on the ImageNet dataset of more than 1
 
 We can have different probabilities for different pre-trained networks. For example, both ResNet50 and Xception networks give the “liner” label in the first place, but with different probabilities of 95% and 74%, respectively. This comparison of different pre-trained models may also give us a baseline of which model would be more reliable or suitable for our dataset; but of course, this needs an elaborate thinking.
 
-Just before wrapping this blog post up I want to share an anecdote about this post:
-
 Not only do models learn from us but we also learn from them. At least, I realized that this was true for myself as a non-native speaker of the English language when I searched for an image containing a “ship” on Google to test the classifier. After running my code, I ended up having the output image with the “liner” label which was more appropriate to name the object in the image. Apparently, computers can classify images better than I could possibly do. :)
 
 
