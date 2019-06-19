@@ -47,10 +47,6 @@ products = pd.read_csv('products.csv')
 line_items = pd.read_csv('line-items.csv')
 customers = pd.read_csv('customers.csv')
 
-```
-
-```python
-
 sales.head()
 sales.dtypes
 sales.info()
@@ -302,6 +298,7 @@ for p in [0, 1, 2, 3, 52]:
 sorted(results_dict.items(), key = lambda x:x[1])
 
 ```
+
 After the grid search above, I found the optimum parameters and used them to fit the model and get the results predicted by the model to plot the projection. As it can be seen in the graph below, the model was able to predict all the up and downs of the seasonality reasonably well.
 
 ```python
@@ -338,7 +335,7 @@ plt.plot(idx, results.predicted_mean)
 
 # Customer life-time analysis
 
-Another component of this project was Customer Life-time Analysis. Not only do businesses have to acquire new customers for the sake of their existence in industry and financial health but retaining existing customers by predicting and preventing churn is also important to them. For this purpose, some analyses were performed and the results were displayed to act accordingly in the future.
+Another component of this project was Customer Life-time Analysis. Not only do businesses have to acquire new customers for the sake of their existence in industry and financial health but retaining existing customers by predicting and preventing churn is also important to them. For this purpose, some analyses were performed and the results were displayed to take necessary measures and actions in the future.
 
 ```python
 
@@ -355,7 +352,7 @@ cust_lifetime2.sort_values('monetary_value', ascending = False)
 
 - `frequency` represents the number of *repeat* purchases the customer has made. This means that it's one less than the total number of purchases. 
 - `T` represents the age of the customer in whatever time units chosen (weekly above). This is equal to the duration between a customer's first purchase and the end of the period under study.
-- `recency` represents the age of the customer when they made their most recent purchases. This is equal to the duration between a customer's first purchase and their latest purchase. (Thus if they have made only 1 purchase, the recency is 0.)
+- `recency` represents the age of the customer when they made their most recent purchases. This is equal to the duration between a customer's first purchase and their latest purchase. (Thus, if they have made only 1 purchase, the recency is 0.)
 
 ```python
 
@@ -401,7 +398,11 @@ plt.title('Frequency of Repeat Transactions', fontsize = 14)
 
 **INSTAGRAM**
 
-text likes and photos were already scraped from Insta by the help of another script found on Github.
+Here we are! This is where I exposed myself to the world of Computer Vision for the first time.
+
+After proving my hypothesis for the significant difference in sales before and after the use of Instagram by applying MannWhitney U test, I decided to perform some Natural Language Processing and Computer Vision techniques.
+
+Captions, dates of posts, likes and photos had already been scraped from Instagram by the help of another script found on GitHub and stored in my disk.
 
 ```python
 
@@ -430,17 +431,7 @@ for i in range (len(results)):
 
 ```
 
-#Create a dataframe : two columns : text, likes
-
-#stopwords : is, the etc
-
-#stemming
-
-#CountVectorizer(df.text, stop_words='english')
-
-#Linear Regression
-
-#Interpret the co-efficients to look at words which influence more likes.
+Then, I created a dataframe including two columns which were text and likes and sorted it by descending number of likes. As a next step, I set stop words (which are the words that don't mean anything useful in a context such as 'the', 'a', 'an' in English) and removed the hashtags in front of the words in my list before using the sklearn library in the next code block.
 
 ```python
 
@@ -450,17 +441,8 @@ df_insta = pd.DataFrame(df)
 df_insta
 df_insta.sort_values('likes', ascending = False)
 
-```
-
-```python
-
 df_insta.loc[0]['text']
-
 df_insta.text
-
-```
-
-```python
 
 stop_words = set(stopwords.words('english'))
 words = []
@@ -474,6 +456,8 @@ hash_tags = [x.lstrip("#") for x in " ".join(df_insta['text']).split() if x.star
 total_words =  [x.lstrip("#") for x in (" ".join(df_insta['text']).split())]
 
 ```
+
+Here, I used the TfidfVectorizer method provided by the Sklearn library (stands for term frequency - inverse document frequency) which is a method used to understand "how important a word is to a document in a collection or corpus." For further information, you can refer to <https://en.wikipedia.org/wiki/Tf–idf> Then, I suggested some hashtags "to use" and "not to use" according to their overall corresponding number of likes to increase the social media engagement. 
 
 ```python
 
@@ -496,6 +480,8 @@ tfidf_df = pd.DataFrame(vectorised.toarray(), columns = tfidf.get_feature_names(
 
 ```
 
+In the next code block, I used the GridSearchCV method in the Sklearn library to find the best alpha value and fit the model to plot and see the correlation between the number of likes and sales as it can be seen in the graphs below. The first one depicted the relation between likes and sales while the second one gave me the dollar-value of "a like" when I calculated the slope of the fitting line. Of course, this doesn't mean that every single like on Instagram will add that real value into the business; however, it prefectly shows the financial importance of a like.
+
 ```python
 
 import sklearn.preprocessing
@@ -514,9 +500,11 @@ gridsearch.fit(X_s, likes)
 
 ```
 
+![2019-5-29-Where-It-All-Started](/images/sales_vs_likes.png "2019-5-29-Where-It-All-Started")
+
 ![2019-5-29-Where-It-All-Started](/images/sales_likes.png "2019-5-29-Where-It-All-Started")
 
-![2019-5-29-Where-It-All-Started](/images/sales_vs_likes.png "2019-5-29-Where-It-All-Started")
+Last but not least, I wanted to add Computer Vision into this project even though it was the simplest version of this huge field with a few lines of code. I split the images scraped from Instagram into 3 color channels by using OpenCV and investigated the correlation between the likes which was directly related to sales and color use in images such as brightness and use of frames etc.
 
 ```python
 
@@ -544,3 +532,5 @@ plt.ylabel("# of Pixels")
 
 *The image of the Frangipani above was taken from: 
 <https://www.bhg.com.au/cdnstorage/cache/6/3/6/0/8/9/x636089759e1b42fcf8a2fd3a5050a1a9923494a6.jpg.pagespeed.ic.v1AO_uIThA.jpg>
+
+**The definition of Frequency-Recency Matrix was taken from <https://pypi.org/project/Lifetimes/0.1.6.4/>
