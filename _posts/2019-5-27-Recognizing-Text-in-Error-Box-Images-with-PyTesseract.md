@@ -4,18 +4,11 @@ title: Recognizing Text in Error Box Images with PyTesseract
 ---
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
-All of us face many errors throughout the day
-
-What I aim here in this post is to be able to contribute to the automated IT Desk solutions. 
-
-Imagine one of your customers is using your software and they've just had an error and it's been displayed into their screen. 
-
-Steps 
-
+What I aim here in this post is to be able to get images or screenshots containing error boxes and feed them into PyTesseract after some operations in OpenCV to recognize text so that I can classify them by the type of error and take actions accordingly. Thus, the workload of IT Help Desks could be reduced after this automation.
 
 **Python Code Block:**
 
-First of all, I imported necessary packages and added argument parser for easy use of command line; then, I assigned a for-loop to go through my dataset and applied some basic computer vision operations such as resizing, converting the images of interest to the grayscale, blurring and thresholding them. 
+First of all, I imported necessary packages and added argument parser for easy use of command line; then, I assigned a for-loop to go through my dataset and applied some basic computer vision operations such as resizing, converting the images of interest to the grayscale, blurring and thresholding them before proceeding further which is quite a common practice in almost every single computer vision application.
 
 ```python
 
@@ -47,15 +40,18 @@ for imagePath in sorted(list(paths.list_images(args["images"]))):
     
 ```
    
-The first block of code was straight-forward and easy to run as these operations are kind of 'must-do' before proceeding further in almost any sort of computer vision related task. 
-
-The output of one of the images after thresholding can be seen below.
-
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_thresholded.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")  
 
-The real deal has just started! What I was planning to do was crop the error box from image using an edge detector and feed that into Tesseract. Needless to say, it didn't work the way I expected. Let me tell you why and what steps I followed to tackle those problems.
+The real deal has just started! What I was planning to do was crop the error box from image using an edge detector and feed that into Tesseract. Needless to say, it didn't work the way I expected. Let me tell you why and what steps I followed to tackle those problems from my logbook.
 
-As mentioned above, the images that I put into my dataset folder were random images that I found on Google Images with error boxes in them. Therefore, all of them were different kind of errors and there was no consistency in both the length of the text in the box and the shape of the box. 
+The images that I put into my dataset folder were random images that I found on Google Images with error boxes in them. Therefore, all of them were different kind of errors and there was no consistency in both the length of the text in the box and the shape of the box. 
+
+The first thing I did was to apply auto canny edge detector and I was hoping to crop the error box. I had a good output; but, some of the edges were discontinued after applying the detector although the canny edge detector is well-known for this job. I also tried to find contours in the image and sort them to find a parent contour with many child contours (RECT_TREE); but, somehow, it didn't work well again. That's why I wanted to try to convert the image to binary. I applied blackhat morphological operation which ended up fine. The text was perfectly visible to human eye, it still wasn't easy to crop for computer though.
+
+HOG + Linear SVM was another option to localize the ROI before extracting; but I didn't try it as HOG doesn’t work well with different aspect ratios. And I wasn't sure if it'd be worth the time I would spend if I created a training dataset and train the model etc.
+
+Then, I changed my approach and decided to apply dilation to images a few times to obtain white blobs in place of the text. I found the contours in the images and used the bounding boxes of these contours to temporarily segment the images then fed them into Tesseract. It is, apparently, not the best solution; however, it worked well enough under these circumstances.
+
 
 
 
