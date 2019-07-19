@@ -50,10 +50,7 @@ The first thing I did was to apply auto canny edge detector and I was hoping to 
 
 HOG + Linear SVM was another option to localize the ROI before extracting; but I didn't try it as HOG doesn’t work well with different aspect ratios. And I wasn't sure if it'd be worth the time I would spend if I created a training dataset and train the model etc.
 
-Then, I changed my approach and decided to apply dilation to images a few times to obtain white blobs in place of the text. I found the contours in the images and used the bounding boxes of these contours to temporarily segment the images then fed them into Tesseract. It is, apparently, not the best solution; however, it worked well enough under these circumstances.
-
-
-
+Then, I changed my approach and decided to apply dilation to images a few times to obtain white blobs in place of the text. I found the contours in the images and used the bounding boxes of these contours to temporarily segment the images then fed them into PyTesseract. It is, apparently, not the best solution; however, it worked well enough under these circumstances.
 
 ```python
 
@@ -66,7 +63,10 @@ Then, I changed my approach and decided to apply dilation to images a few times 
     _, cnts, _ = cv2.findContours(clone, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 ```
+
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_dilated.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
+
+After the dilation process, I took advantage of the bounding boxes of contours to segment the blobs in the image. Of course, my error text was not the only blob with or without meaningful word chunks in the entire image. There were some other parts of the image which was segmented after dilation to send through PyTesseract.
 
 ```python
 
@@ -81,8 +81,10 @@ Then, I changed my approach and decided to apply dilation to images a few times 
         #cv2.waitKey(0)
         
 ```
+
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_contour_segments.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
+Below, I saved the segmentd image on my disc temporarily just to be able to feed every single segmented image into PyTesseract, then I deleted the saved image.
 
 ```python
 
@@ -96,6 +98,7 @@ Then, I changed my approach and decided to apply dilation to images a few times 
 ```
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_tesseract_output.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
+Next, I opened a new text file and saved the output of PyTesseract into that file .
 
 ```python
 

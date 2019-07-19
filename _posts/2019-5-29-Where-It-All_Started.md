@@ -504,7 +504,7 @@ gridsearch.fit(X_s, likes)
 
 ![2019-5-29-Where-It-All-Started](/images/sales_likes.png "2019-5-29-Where-It-All-Started")
 
-Last but not least, I wanted to add Computer Vision into this project even though it was the simplest version of this huge field with a few lines of code. I split the images scraped from Instagram into 3 color channels by using OpenCV and investigated the correlation between the likes which was directly related to sales and color use in images such as brightness and use of frames etc.
+Last but not least, I wanted to add Computer Vision into this project even though it was the simplest version of this huge field with a few lines of code. I split the images scraped from Instagram into 3 color channels by using OpenCV and investigated the correlation between the likes which was directly related to sales and color use in images such as brightness and the use of frames etc.
 
 ```python
 
