@@ -4,9 +4,9 @@ title: Where It All Started
 ---
 ![2019-5-29-Where-It-All-Started](/images/frangipani.png "2019-5-29-Where-It-All-Started")
 
-In this first post of mine, I wanted to share my Capstone Project that I did at the end of the Data Science Immersive Course I took at General Assembly Sydney. Although the Computer Vision related code is just a few lines at the end, the whole shows what kind of projects I was involved in before merging with CV. Besides, this project has led me to having greater interest in the field of CV.
+In this post, I wanted to share my Capstone Project that I did at the end of the Data Science Immersive Course I took at General Assembly Sydney. Although the Computer Vision related code is just a few lines, the whole shows what kind of projects I was involved in before merging with CV. Besides, this project has led me to having greater interest in the field of CV.
 
-The below code was written  18 months ago in Python 2.7 in a Jupyter Notebook for a wholesaler florist located in Brisbane - Australia. Due to the Non-Disclosure Agreement I've signed, I may not be able to give detailed information about the dataset and the outputs of codes in some parts. Apologies in advance for the inconvenience this incompleteness may cause.
+The code below was written 18 months ago in Python 2.7 in a Jupyter Notebook for a wholesaler florist located in Brisbane - Australia. Due to the Non-Disclosure Agreement I've signed, I may not be able to give detailed information about the dataset and the outputs of codes in some parts. Apologies in advance for the inconvenience this incompleteness may cause.
 
 The sales dataset which was of my main interest has 32000 rows with 24 columns such as customer id, line items, sale date, total price for almost 900 unique customers over 2 and a half years of data from December 2014 to August 2017.
 

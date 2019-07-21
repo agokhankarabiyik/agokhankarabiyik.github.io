@@ -6,7 +6,7 @@ title: Face Detection
 
 As it can be seen above, the model is able to detect all of the faces in the image correctly. *GoT Spoiler Alert* I believe the detector will fail at Arya Stark’s face; but we shouldn’t be blaming it on the detector itself as she is a faceless now.
 
-Joking aside, this detector is fast thanks to the cascades being fast at computation; however, it works better mostly at frontal images and either give users false-positives easily or miss the presence of a face.
+Joking aside, this detector is fast thanks to the cascades being fast at computation; however, it works better mostly at frontal images and either gives users false-positives easily or misses the presence of a face.
 
 Now that there’s HOG and CNNs at our disposal to build detectors, it can be said that this is not the best face detector; but does well enough using only OpenCV library. Besides, improvements to some extend can be achieved although the parameters are not easy to tune. 
 

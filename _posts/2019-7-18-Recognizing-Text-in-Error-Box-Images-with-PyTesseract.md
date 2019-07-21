@@ -84,7 +84,7 @@ After the dilation process, I took advantage of the bounding boxes of contours t
 
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_contour_segments.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
-Below, I saved the segmentd image on my disc temporarily just to be able to feed every single segmented image into PyTesseract, then I deleted the saved image.
+Below, I saved the segmented image on my disc temporarily just to be able to feed every single segmented image into PyTesseract, then I deleted the saved image after I'm done with it.
 
 ```python
 
@@ -96,19 +96,22 @@ Below, I saved the segmentd image on my disc temporarily just to be able to feed
         print(text)
 
 ```
+
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_tesseract_output.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
-Next, I opened a new text file and saved the output of PyTesseract into that file .
+Next, I opened a new text file and saved the output of PyTesseract into that file as I would need it for further investigation and/or classification which I will explain what I mean by that below.
 
 ```python
-
 
         file = open((imagePath.rsplit(".", 1)[0]) + ".txt", "a+")
         file.write(text)
         file.close()
 
 ```
+
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error1_text_file.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
+
+In the next code block, I went through all the text files one by one to see whether or not any one of the files contained the pre-defined key words which eventually indicated the type of error of that file and the image of that error box accordingly. Simply, when a text file contained the words "server" and "cannot" which were the unique keywords for error type 1, it was an indication that the corresponding image belonged to that specific error type. I must admit that the logic here is very primitive; but, it is nice to keep in mind that this work is just a prototype and it will soon be improved.
 
 ```python
 
@@ -129,7 +132,10 @@ for imagePath in sorted(list(paths.list_images(args["images"]))):
         print("none")
         
 ```
+
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error_types_output.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
+
+I also wanted to be able to search for the images containing specific type of error(s). For this purpose, I added the following lines where you provide the unique keyword(s) for the error type that you are looking for and you get the output in your terminal.
 
 ```python
 
@@ -141,17 +147,17 @@ for imagePath in sorted(list(paths.list_images(args["images"]))):
     if(search_word in strings):
         print("word found in " + imagePath[imagePath.rfind("/") + 1:])
 
-
 ```
+
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error_search.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
-
-
+I wasn't always as lucky as I was in the example above. PyTesseract was sometimes unable to read some of the images because either they were low quality or the segmentation after the threshold and dilation processes was not good enough for some reasons as in the example below. We should remember that the images were not consistent as a good dataset should be; so, this problem was kind of expected.
 
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error10_bounding_rectangles.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
 ![2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract](/images/error10_text_file.png "2019-5-27-Recognizing-Text-in-Error-Box-Images-with-PyTesseract")
 
+All in all, this piece of work was just an opportunity that I've created for me to apply some basic computer vision techniques with a simple logic and see how it works instead of applying Linear SVM + HOG to the MNIST Dataset for the 100th time. As a next step, I will build my own dataset with consistent training and testing sets and train my own algorithm, preferably Linear SVM + HOG to start with, and take it from there.
 
 *The images were taken from: 
 Error1: <https://pjrjx47372.i.lithium.com/t5/image/serverpage/image-id/9002i069ABAE234BCD2D4/image-size/large?v=1.0&px=999>
